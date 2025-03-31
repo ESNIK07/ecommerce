@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center">🛒 Carrito de Compras</h2>
+
+    {% if carrito %}
+        <table class="table table-striped mt-4">
+            <thead class="table-dark">
+                <tr>
+                    <th>Imagen</th>
+                    <th>Producto</th>
+                    <th>Precio</th>
+                    <th>Cantidad</th>
+                    <th>Subtotal</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for key, item in carrito.items %}
+                    <tr>
+                        <td>
+                            {% if item.imagen %}
+                                <img src="{{ item.imagen }}" alt="{{ item.nombre }}" width="60">
+                            {% else %}
+                                <p>Sin imagen</p>
+                            {% endif %}
+                        </td>
+                        <td>{{ item.nombre }}</td>
+                        <td>${{ item.precio }}</td>
+                        <td>{{ item.cantidad }}</td>
+                        <td>${% widthratio item.precio 1 item.cantidad as subtotal %} ${{ subtotal|floatformat:1 }}</td>
+                        <td>
+                            <a href="{% url 'agregar_al_carrito' key %}" class="btn btn-sm btn-success">➕</a>
+                            <a href="{% url 'disminuir_cantidad' key %}" class="btn btn-sm btn-warning">➖</a>
+                            <a href="{% url 'eliminar_del_carrito' key %}" class="btn btn-sm btn-danger">❌</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="d-flex justify-content-between">
+            <a href="{% url 'lista_productos' %}" class="btn btn-primary">⬅️ Seguir Comprando</a>
+            <a href="{% url 'limpiar_carrito' %}" class="btn btn-danger">🗑 Vaciar Carrito</a>
+        </div>
+    {% else %}
+        <div class="alert alert-warning text-center mt-4">
+            <h4>Tu carrito está vacío 🛒</h4>
+            <a href="{% url 'lista_productos' %}" class="btn btn-primary mt-3">Explorar Productos</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
